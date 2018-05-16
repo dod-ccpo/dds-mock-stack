@@ -1,3 +1,4 @@
-atat: morbo ./atat/atat.pl --listen http://*:$PORT
+atat:  ./atat/server $PORT
 cloud: ./cloud/server $PORT
 fundz: ./fundz/server $PORT
+authz: ./authz/server $PORT

@@ -10,7 +10,7 @@ plugin 'yaml_config';
 app->helper( version => sub { "$VERSION" } );
 
 # User agents for services
-for my $service (qw/cloud fundz/) {
+for my $service (qw/cloud fundz authz/) {
     helper $service => sub($c) {
         my $base = Mojo::URL->new( $c->config->{services}{$service}->{url} );
         $c->ua->on(start => sub ($ua,$tx) {
@@ -30,7 +30,6 @@ app->start;
 __DATA__
 @@ index.html.ep
 <h1>AT-AT version <%= version %></h1>
-
 <pre>
 <h1>cloud</h1>
 %= config->{services}{cloud}{url};
@@ -39,5 +38,10 @@ __DATA__
 <h1>fundz</h1>
 %= config->{services}{fundz}{url};
 %= dumper( fundz->get('/status')->result->json );
+
+<h1>authz</h1>
+%= config->{services}{authz}{url};
+%= dumper( authz->get('/status')->result->json );
+
 </pre>
 

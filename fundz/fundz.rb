@@ -3,12 +3,14 @@
 require 'sinatra'
 require 'json'
 
+version = '0.0.2'
+
 get '/' do
-    'this is fundz version 0.0.2'
+    'this is fundz version ' + version
 end
 
 get '/status' do
     content_type :json
-    { :name => 'fundz', :status => 'ok', :version => '0.0.2' }.to_json
+    { :name => 'fundz', :status => 'ok', :version => version }.to_json
 end
 
