@@ -1,0 +1,5 @@
+services:
+  cloud :
+    url : http://localhost:5100
+  fundz :
+    url : http://localhost:5200

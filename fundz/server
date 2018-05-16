@@ -1,0 +1,5 @@
+#!/bin/bash
+
+port=${1:-3002}
+cd `dirname $0`
+ruby ./fundz.rb -p $port
