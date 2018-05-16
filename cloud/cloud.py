@@ -9,4 +9,4 @@ def hello():
 
 @app.route("/status")
 def version():
-    return jsonify({ "version" : "0.0.1", "status" : "ok" })
+    return jsonify({ "name" : "cloud", "version" : "0.0.1", "status" : "ok" })

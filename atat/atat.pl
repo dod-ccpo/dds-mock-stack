@@ -3,43 +3,41 @@
 use Mojolicious::Lite;
 use experimental 'signatures';
 
-our $VERSION = 0.0.1;
+our $VERSION = "0.0.1";
 
 plugin 'yaml_config';
 
-get '/' => sub($c) {
-  for my $service (qw/cloud fundz/) {
-    my $url = Mojo::URL->new($c->config->{services}{$service}->{url})
-      ->path('/status');
-    my $tx = $c->ua->get($url);
-    if (my $res = $tx->success) {
-      $c->stash($service => $res->json);
-    }
-    else {
-      $c->stash($service => $tx->{error} // 'no connection');
-    }
-  }
-} => 'index';
+app->helper( version => sub { "$VERSION" } );
 
-get '/status' => {json => {version => $VERSION, status => 'ok'}};
+# User agents for services
+for my $service (qw/cloud fundz/) {
+    helper $service => sub($c) {
+        my $base = Mojo::URL->new( $c->config->{services}{$service}->{url} );
+        $c->ua->on(start => sub ($ua,$tx) {
+            $tx->req->url->host($base->host);
+            $tx->req->url->port($base->port);
+        });
+        $c->ua;
+    };
+}
+
+get '/' => 'index';
+
+get '/status' => {json => {version => $VERSION, status => 'ok', name => 'atat' }};
 
 app->start;
 
 __DATA__
 @@ index.html.ep
-This is AT-AT.
+<h1>AT-AT version <%= version %></h1>
 
 <pre>
-%= dumper(config);
-</pre>
-
 <h1>cloud</h1>
-<pre>
-%= dumper(stash 'cloud');
-</pre>
+%= config->{services}{cloud}{url};
+%= dumper( cloud->get('/status')->result->json );
 
 <h1>fundz</h1>
-<pre>
-%= dumper(stash 'fundz');
+%= config->{services}{fundz}{url};
+%= dumper( fundz->get('/status')->result->json );
 </pre>
 
