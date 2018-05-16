@@ -1,0 +1,5 @@
+#!/bin/bash
+
+port=${1:-8888}
+cd `dirname $0`
+python app.py $port

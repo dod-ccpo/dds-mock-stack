@@ -5,3 +5,5 @@ services:
     url : http://localhost:5200
   authz :
     url : http://localhost:5300
+  auth  :
+    url : http://localhost:5400
