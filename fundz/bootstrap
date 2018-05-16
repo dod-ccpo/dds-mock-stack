@@ -1,4 +1,3 @@
 #!/bin/sh
 
-gem install sinatra
-gem install json
+bundle install
