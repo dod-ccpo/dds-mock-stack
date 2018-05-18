@@ -25,6 +25,18 @@ get '/' => 'index';
 
 get '/status' => {json => {version => $VERSION, status => 'ok', name => 'atat' }};
 
+get '/all' => sub($c) {
+    my $cloud = $c->cloud->get_p('/status');
+    my $fundz = $c->fundz->get_p('/status');
+    Mojo::Promise->all($cloud,$fundz)->then(sub($cloud,$fundz) {
+        $c->render(text =>
+            "cloud : " . $cloud->[0]->result->json->{version} . "\n" .
+            "fundz : " . $fundz->[0]->result->json->{version} . "\n"
+        );
+    })->wait;
+    $c->render_later;
+};
+
 app->start;
 
 __DATA__
